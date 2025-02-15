@@ -32,26 +32,30 @@ export default function VehicleCards({ showAlert }) {
     sessionStorage.setItem("totalHours", totalHours);
 
     // Fetch data from API
-    const fetchData = async () => {
-        try {
-            const res = await axios.post(`${states.hostname}/api/search/`, {
-                city: filters.city,
-                vtype: filters.vtype,
-                sortBy: filters.sortBy,
-            });
+   const fetchData = async () => {
+    try {
+        const res = await axios.post(`${states.hostname}/api/search/`, {
+            city: filters.city,
+            vtype: filters.vtype,
+            sortBy: filters.sortBy,
+        });
 
-            if (res.data === "Empty") {
-                sessionStorage.clear();
-                navigate("/");
-                showAlert("Sorry! Vehicle(s) are not available", "danger");
-            } else {
-                states.setResults({ data: res.data });
-            }
-        } catch (err) {
-            navigate("/login");
-            showAlert(err.response.data, "danger");
+        console.log("API Response:", res); // Debugging
+
+        if (!res.data || res.data === "Empty") {
+            sessionStorage.clear();
+            navigate("/");
+            showAlert("Sorry! Vehicle(s) are not available", "danger");
+        } else {
+            states.setResults({ data: res.data });
         }
-    };
+    } catch (err) {
+        console.error("Axios Error:", err);
+        showAlert(err.response?.data || "Network error, please try again.", "danger");
+        navigate("/login");
+    }
+};
+
 
     useEffect(() => {
         fetchData();
