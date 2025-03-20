@@ -10,7 +10,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-const allowedOrigins = ['http://localhost:3001'];
+const allowedOrigins = ['http://localhost:3000'];
 app.use(cors({
     origin: allowedOrigins,
     credentials: true,
